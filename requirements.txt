@@ -1,0 +1,3 @@
+requests==2.31.0 # API-Zugriff (Tagesschau)
+flask==2.3.3 # API Bereitstellung
+sqlite3 #sqlite3
