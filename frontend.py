@@ -244,13 +244,45 @@ def update_top_right_graph(graph_type):
         create_bar_chart(stats_top_right_frame, top_states)
 
 def populate_date_dropdown():
-    """Generate a list of dates for the dropdown menu."""
-    start_date = datetime(2026, 3, 8)
-    end_date = datetime.now() - timedelta(days=1)
-    date_list = [(start_date + timedelta(days=i)).strftime("%d.%m.%Y") for i in range((end_date - start_date).days + 1)]
-    return date_list
+    """Generate a list of dates for the dropdown menu based on available DB data."""
+    rows = execute_query("""
+        SELECT DISTINCT date
+        FROM (
+            SELECT date FROM daily_summary
+            UNION
+            SELECT date FROM daily_tags
+            UNION
+            SELECT date FROM daily_states
+        )
+        ORDER BY date ASC;
+    """)
 
-current_date = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    if rows:
+        return [datetime.strptime(row[0], "%Y-%m-%d").strftime("%d.%m.%Y") for row in rows]
+
+    start_date = datetime(2026, 3, 8)
+    end_date = datetime.now()
+    return [(start_date + timedelta(days=i)).strftime("%d.%m.%Y") for i in range((end_date - start_date).days + 1)]
+
+def get_initial_current_date():
+    """Get the newest available date from DB, fallback to today."""
+    rows = execute_query("""
+        SELECT MAX(date)
+        FROM (
+            SELECT date FROM daily_summary
+            UNION
+            SELECT date FROM daily_tags
+            UNION
+            SELECT date FROM daily_states
+        );
+    """, fetch_all=False)
+
+    if rows and rows[0]:
+        return rows[0]
+
+    return datetime.now().strftime("%Y-%m-%d")
+
+current_date = get_initial_current_date()
 
 def update_graphs_and_labels(new_date):
     """Update graphs and labels when the date is changed."""
@@ -330,8 +362,7 @@ welcome_label.pack(expand=True)
 update_time()
 
 date_options = populate_date_dropdown()
-yesterday_date = (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
-selected_date = tk.StringVar(value=yesterday_date)
+selected_date = tk.StringVar(value=datetime.strptime(current_date, "%Y-%m-%d").strftime("%d.%m.%Y"))
 date_dropdown = tk.OptionMenu(
     welcome_frame, selected_date, *date_options,
     command=lambda new_date: update_graphs_and_labels(new_date)
