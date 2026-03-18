@@ -1,5 +1,5 @@
 from analyze import fetch_news_from_api, extract_news_data, analyze_tags_and_region_ids
-from database_helper import initialize_database, update_tags_in_db, update_states_in_db, update_article_count, get_current_date
+from python_news_dashboard.db_helper import initialize_database, update_tags_in_db, update_states_in_db, update_article_count, get_current_date
 import time
 
 API_URL = "https://www.tagesschau.de/api2u/news"
