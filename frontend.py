@@ -145,7 +145,7 @@ def create_line_chart(frame, data, title):
 
 def normalize_state_name(name):
     """Normalize state names to ASCII."""
-    return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("utf-8")
+    return name
 
 def create_germany_map(frame, geojson_path, data, date):
     """Create and embed a map of Germany with article counts in the given tkinter frame."""
