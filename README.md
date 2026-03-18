@@ -4,19 +4,18 @@
 
 `python_news_dashboard` ist ein Python-basiertes Dashboard, das Tagesschau-Nachrichtendaten (API) analysiert und speichert. Das Projekt beinhaltet:
 
-- Tägliche API-Abfrage und Datenanalyse (Tags + Bundesländer)
+- Tägliche Datenabfrage und Datenanalyse (Tags + Bundesländer)
 - Speicherung in SQLite (`news_data.db`)
-- REST-API zur Auslieferung der aggregierten Daten
-- Tkinter-basierte Desktop-Visualisierung mit Kartendarstellung
+- Lokale Tkinter-basierte Desktop-Visualisierung mit Kartendarstellung
 
 
 ## 🧭 Architektur
 
-1. `main.py`: Hauptprozess, der die API automatisch täglich abruft und in DB speichert.
+1. `main.py`: Hauptprozess, der die Tagesschau-Daten automatisch abruft und in DB speichert.
 2. `analyze.py`: Daten-Extraktion, Tag-/Region-Analyse und Filterlogik.
 3. `database_helper.py`: SQLite-Initialisierung und Speicherung in Tabellen.
-4. `api.py`: Flask-API-Endpunkte für Tags, Bundesländer und Artikelanzahl.
-5. `frontend.py`: Tkinter-GUI mit Diagrammen (Matplotlib) und GeoJSON-Karte.
+4. `frontend.py`: Tkinter-GUI mit Diagrammen (Matplotlib) und GeoJSON-Karte.
+4. `frontend.py`: Tkinter-GUI mit Diagrammen (Matplotlib) und GeoJSON-Karte.
 
 
 ## 🚀 Schnellstart
@@ -27,7 +26,7 @@
 cd python_news_dashboard
 ```
 
-### 2) Virtuelle Umgebung (empfohlen)
+### 2) Virtuelle Umgebung 
 
 ```bash
 python -m venv .venv
@@ -40,11 +39,11 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-> Hinweis: Für die GUI (`frontend.py`) werden zusätzlich benötigt:
+> Hinweis: Für die GUI (`frontend.py`) werden zusätzliche Bibliotheken benötigt:
 > - `matplotlib`
 > - `geopandas`
 > - `pandas`
-> - `tkinter` (normalerweise in Python enthalten)
+> - `tkinter`
 
 Installieren bei Bedarf:
 
@@ -71,25 +70,9 @@ Tabellen:
 - `daily_summary` (`date`, `article_count`)
 
 
-## 🌐 API Endpunkte (`api.py`)
-
-Starte Flask:
-
-```bash
-python api.py
-```
-
-Verfügbare Endpunkte:
-
-- `GET /api/tags`
-- `GET /api/states`
-- `GET /api/articles`
-- `GET /api/tags/<date>` (Format `YYYY-MM-DD`)
-- `GET /api/states/<date>`
-- `GET /api/articles/<date>`
-
-
 ## 🖥️ Desktop-Frontend
+
+Starte das GUI:
 
 ```bash
 python frontend.py
@@ -99,15 +82,26 @@ Das GUI zeigt:
 - Top-Schlagworte
 - Analyse pro Bundesland
 - Zeitreihe Artikelanzahl
-- Deutschlandkarte (GeoJSON `2_hoch.geo.json`)
+- Deutschlandkarte
 
+
+
+## 🧪 Tests
+
+Um Unit-Tests auszuführen:
+
+```bash
+cd python_news_dashboard
+pytest -q
+```
+
+Die Tests prüfen die Kernlogik in `analyze.py` und die Datenbankfunktionalität in `db_helper.py`.
 
 ## 🔧 Wichtige Dateien
 
 - `main.py` – Orchestrator für API-Abruf, Analyse, DB-Update
 - `analyze.py` – Logik für Tag- und Region-Analyse
-- `database_helper.py` – DB-Initialisierung und Insert-Funktionen
-- `api.py` – REST-API-Endpunkte
+- `db_helper.py` – DB-Initialisierung und Insert-Funktionen
 - `frontend.py` – Tkinter-Auswertung & Visualisierung
 - `2_hoch.geo.json` – GeoJSON für Bundesländerkarte
 
